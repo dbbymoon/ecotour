@@ -1,8 +1,5 @@
 package com.kakao.ecotour.enumeration;
 
-import com.kakao.ecotour.entity.Region;
-import lombok.Getter;
-
 import java.util.Arrays;
 
 

@@ -1,10 +1,14 @@
-package com.kakao.ecotour.entity;
+package com.kakao.ecotour.jpa;
 
-import com.kakao.ecotour.dto.EcoProgramDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kakao.ecotour.controller.EcoProgramCsv;
 import com.kakao.ecotour.util.ModelMapperUtils;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -13,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "prgmSeq", callSuper = false)
 @Table(name = "eco_program")
-public class EcoProgram extends SuperEntity {
+public class EcoProgram {
 
     @Id
     @Column(nullable = false)
@@ -38,8 +42,17 @@ public class EcoProgram extends SuperEntity {
     @Column(nullable = false, length = 1000000)
     private String prgmDetailInfo;  // 프로그램 상세 소개
 
-    public static EcoProgram of(EcoProgramDto ecoProgramDto, Region region) {
-        EcoProgram ecoProgram = ModelMapperUtils.getModelMapper().map(ecoProgramDto, EcoProgram.class);
+    @Column(nullable = false, updatable = false)
+    @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime createdDatetime = LocalDateTime.now();
+
+    @LastModifiedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime modifiedDatetime;
+
+    public static EcoProgram of(EcoProgramCsv ecoProgramCsv, Region region) {
+        EcoProgram ecoProgram = ModelMapperUtils.getModelMapper().map(ecoProgramCsv, EcoProgram.class);
         ecoProgram.setRegionCity(region);
         return ecoProgram;
     }

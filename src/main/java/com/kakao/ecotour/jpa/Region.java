@@ -1,4 +1,4 @@
-package com.kakao.ecotour.entity;
+package com.kakao.ecotour.jpa;
 
 import lombok.*;
 
@@ -17,10 +17,10 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private long regionSeq;    // 번호
+    private long regionSeq;
 
     @Column(nullable = false)
-    private String regionCode;
+    private String regionCode;  // 서비스 지역 코드
 
     @Column(nullable = false)
     private String regionName;  // 서비스 지역 이름

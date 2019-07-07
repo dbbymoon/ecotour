@@ -1,42 +1,50 @@
 package com.kakao.ecotour.service;
 
-import com.kakao.ecotour.dto.EcoProgramDto;
-import com.kakao.ecotour.dto.RegionDto;
-import com.kakao.ecotour.entity.Region;
-import com.kakao.ecotour.repository.EcoProgramRepository;
-import com.kakao.ecotour.repository.RegionRepository;
+import com.kakao.ecotour.elastic.*;
+import com.kakao.ecotour.exception.ProgramNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional(readOnly = true)
 @Service
 public class SearchProgramService {
 
-    private final EcoProgramRepository ecoProgramRepository;
+    private final EcoProgramElasticRepository ecoProgramElasticRepository;
 
-    private final RegionRepository regionRepository;
+    public SearchProgramService(EcoProgramElasticRepository ecoProgramElasticRepository) {
+        this.ecoProgramElasticRepository = ecoProgramElasticRepository;
+    }
 
-    public SearchProgramService(EcoProgramRepository ecoProgramRepository, RegionRepository regionRepository) {
-        this.ecoProgramRepository = ecoProgramRepository;
-        this.regionRepository = regionRepository;
+    public EcoProgramDto getEcoProgram(long id) {
+        return ecoProgramElasticRepository.findById(id).orElseThrow(ProgramNotFoundException::new);
     }
 
     public List<EcoProgramDto> getEcoProgramList() {
-        return EcoProgramDto.of(ecoProgramRepository.findAll());
+        List<EcoProgramDto> ecoProgramDtoList = new ArrayList<>();
+        ecoProgramElasticRepository.findAll().forEach(ecoProgramDtoList::add);
+        return ecoProgramDtoList;
     }
 
     public List<EcoProgramDto> getEcoProgramListByRegionCode(String regionCode) {
-        return EcoProgramDto.of(
-                regionRepository.findByRegionCode(regionCode).orElseThrow(RuntimeException::new)
-                        .getEcoProgramList());
+        return ecoProgramElasticRepository.findByRegionCode(regionCode);
     }
 
-    public List<RegionDto> getEcoProgramListByRegion(String regionName) {
+    public RegionSearchResultDto getEcoProgramListByRegion(String regionName) {
+        return ecoProgramElasticRepository.findByRegionName(regionName);
+    }
 
-        List<Region> regionList = regionRepository.findByRegionNameContaining(regionName);
+    public KeywordSearchRegionCountResultDto getRegionCountByProgramInfoKeyword(String keyword) {
+        return ecoProgramElasticRepository.findRegionCountByProgramInfoKeyword(keyword);
+    }
 
-        return RegionDto.of(regionList);
+    public KeywordFrequencyResultDto getFrequencyByProgramDetailInfoKeyword(String keyword) {
+        return ecoProgramElasticRepository.findFrequencyByProgramDetailInfoKeyword(keyword);
+    }
+
+    public RecommendProgramDto recommendProgramByRegionAndKeyword(String region, String keyword) {
+        return null;
     }
 }

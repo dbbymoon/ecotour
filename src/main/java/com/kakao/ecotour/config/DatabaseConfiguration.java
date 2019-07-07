@@ -13,7 +13,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:/application.properties")
-@EntityScan(basePackages = "com.kakao.ecotour.entity")
+@EntityScan(basePackages = "com.kakao.ecotour.jpa")
 public class DatabaseConfiguration {
 
     @Bean

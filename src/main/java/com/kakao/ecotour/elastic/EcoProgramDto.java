@@ -1,44 +1,46 @@
-package com.kakao.ecotour.dto;
+package com.kakao.ecotour.elastic;
 
-import com.kakao.ecotour.entity.EcoProgram;
+import com.kakao.ecotour.jpa.EcoProgram;
 import com.kakao.ecotour.util.ModelMapperUtils;
-import com.opencsv.bean.CsvBindByName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Setter
 @Getter
+@Setter
 @ToString
 @Document(indexName = "program", type = "eco_program")
 public class EcoProgramDto {
 
     @Id
-    @CsvBindByName(column = "번호", required = true)
     private long prgmSeq;
 
-    @CsvBindByName(column = "프로그램명", required = true)
     private String prgmName;
 
-    @CsvBindByName(column = "테마별 분류", required = true)
     private String theme;
 
-    @CsvBindByName(column = "서비스 지역", required = true)
+    @Field(fielddata = true)
+    private String regionCode;
+
+    private String regionName;
+
     private String region;
 
-    @CsvBindByName(column = "프로그램 소개")
     private String prgmInfo = "";
 
-    @CsvBindByName(column = "프로그램 상세 소개")
     private String prgmDetailInfo = "";
 
     public static EcoProgramDto of(EcoProgram ecoProgram) {
         EcoProgramDto ecoProgramDto = ModelMapperUtils.getModelMapper().map(ecoProgram, EcoProgramDto.class);
+        ecoProgramDto.setRegionCode(ecoProgram.getRegionCity().getRegionCode());
+        ecoProgramDto.setRegionName(ecoProgram.getRegionCity().getRegionName());
         return ecoProgramDto;
     }
 
@@ -47,4 +49,5 @@ public class EcoProgramDto {
                 .map(EcoProgramDto::of)
                 .collect(Collectors.toList());
     }
+
 }

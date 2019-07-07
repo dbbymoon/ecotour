@@ -1,21 +1,20 @@
 package com.kakao.ecotour.service;
 
-import com.kakao.ecotour.dto.EcoProgramDto;
-import com.kakao.ecotour.entity.EcoProgram;
-import com.kakao.ecotour.entity.Region;
+import com.kakao.ecotour.controller.EcoProgramCsv;
+import com.kakao.ecotour.jpa.EcoProgram;
+import com.kakao.ecotour.jpa.Region;
 import com.kakao.ecotour.enumeration.RegionEnum;
-import com.kakao.ecotour.repository.EcoProgramRepository;
-import com.kakao.ecotour.repository.RegionRepository;
+import com.kakao.ecotour.jpa.EcoProgramRepository;
+import com.kakao.ecotour.jpa.RegionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +33,7 @@ public class ManageProgramServiceTest {
     private String getRegionCode(String address) {
         return RegionEnum.경기도.getCode(address)+address.hashCode();
     }
-
+/*
     @Test
     public void saveRegionTest() {
         String address = "경기도";
@@ -85,19 +84,23 @@ public class ManageProgramServiceTest {
         when(regionRepository.findByRegionName("경기도 성남")).thenReturn(
                 Optional.of(new Region(regionCode, "경기도 성남")));
 
-        EcoProgramDto ecoProgramDto = new EcoProgramDto();
-        ecoProgramDto.setRegion(address);
+        EcoProgramCsv ecoProgramCsv = new EcoProgramCsv();
+        ecoProgramCsv.setRegion(address);
 
         EcoProgram ecoProgramResult = new EcoProgram();
         ecoProgramResult.setRegionCity(new Region(regionCode, "경기도 성남"));
 
         when(ecoProgramRepository.save(any())).thenReturn(ecoProgramResult);
 
-        ecoProgramDto = manageProgramService.saveEcoProgram(ecoProgramDto);
+        ecoProgramCsv = manageProgramService.saveEcoProgram(ecoProgramCsv);
 
-        assertEquals(ecoProgramResult.getRegion(),ecoProgramDto.getRegion());
+        assertEquals(ecoProgramResult.getRegion(), ecoProgramCsv.getRegion());
 
+    }*/
+
+
+    @Test
+    public void getRegionCode1() throws JSONException {
+        System.out.println(manageProgramService.getRegionCode("경기도 광주시"));
     }
-
-
 }
