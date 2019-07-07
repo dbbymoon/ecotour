@@ -19,7 +19,7 @@ public class KeywordSearchRegionCountResultDto {
 
     private List<Program> programs;
 
-    public static KeywordSearchRegionCountResultDto of(String keyword, SearchResponse response) {
+    static KeywordSearchRegionCountResultDto of(String keyword, SearchResponse response) {
         KeywordSearchRegionCountResultDto resultDto = new KeywordSearchRegionCountResultDto();
         Terms terms = response.getAggregations().get("byRegionName");
         resultDto.setPrograms(terms.getBuckets().stream().map(Program::of).collect(Collectors.toList()));

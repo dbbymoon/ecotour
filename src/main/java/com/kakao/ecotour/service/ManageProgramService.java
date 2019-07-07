@@ -37,12 +37,11 @@ public class ManageProgramService {
 
     public EcoProgramDto saveEcoProgram(EcoProgramCsv ecoProgramCsv) {
         // DB save
-        Region region = null;
+        Region region = new Region();
         try {
             region = saveRegion(ecoProgramCsv.getRegion());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        } catch (JSONException e) {}
+
         EcoProgram ecoProgram = ecoProgramRepository.save(EcoProgram.of(ecoProgramCsv, region));
         // ES save
         EcoProgramDto ecoProgramDto = ecoProgramElasticRepository.save(EcoProgramDto.of(ecoProgram));

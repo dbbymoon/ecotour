@@ -1,22 +1,11 @@
 package com.kakao.ecotour.service;
 
-import com.kakao.ecotour.controller.EcoProgramCsv;
-import com.kakao.ecotour.jpa.EcoProgram;
-import com.kakao.ecotour.jpa.Region;
-import com.kakao.ecotour.enumeration.RegionEnum;
 import com.kakao.ecotour.jpa.EcoProgramRepository;
 import com.kakao.ecotour.jpa.RegionRepository;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ManageProgramServiceTest {
@@ -30,9 +19,6 @@ public class ManageProgramServiceTest {
     @Mock
     private RegionRepository regionRepository;
 
-    private String getRegionCode(String address) {
-        return RegionEnum.경기도.getCode(address)+address.hashCode();
-    }
 /*
     @Test
     public void saveRegionTest() {
@@ -98,9 +84,4 @@ public class ManageProgramServiceTest {
 
     }*/
 
-
-    @Test
-    public void getRegionCode1() throws JSONException {
-        System.out.println(manageProgramService.getRegionCode("경기도 광주시"));
-    }
 }
