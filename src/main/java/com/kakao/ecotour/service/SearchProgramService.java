@@ -1,6 +1,6 @@
 package com.kakao.ecotour.service;
 
-import com.kakao.ecotour.controller.EcoProgramCsv;
+import com.kakao.ecotour.controller.EcoProgramCSV;
 import com.kakao.ecotour.elastic.*;
 import com.kakao.ecotour.exception.ProgramNotFoundException;
 import com.kakao.ecotour.exception.SearchResultNotExistException;
@@ -23,31 +23,32 @@ public class SearchProgramService {
         this.ecoProgramRepository = ecoProgramRepository;
     }
 
-    public EcoProgramCsv getEcoProgram(long id) throws ProgramNotFoundException {
-        return EcoProgramCsv.of(ecoProgramRepository.findById(id).orElseThrow(ProgramNotFoundException::new));
+    public EcoProgramCSV getEcoProgram(long id) throws ProgramNotFoundException {
+        return EcoProgramCSV.of(ecoProgramRepository.findById(id).orElseThrow(ProgramNotFoundException::new));
     }
 
-    public List<EcoProgramCsv> getEcoProgramList() {
-        return EcoProgramCsv.of(ecoProgramRepository.findAll());
+    public List<EcoProgramCSV> getEcoProgramList() {
+        return EcoProgramCSV.of(ecoProgramRepository.findAll());
     }
 
-    public List<EcoProgramCsv> getEcoProgramListByRegionCode(String regionCode) {
-        return EcoProgramCsv.ofDto(ecoProgramElasticRepository.findByRegionCode(regionCode));
+    public List<EcoProgramCSV> getEcoProgramListByRegionCode(String regionCode) {
+        return EcoProgramCSV.ofDto(ecoProgramElasticRepository.findByRegionCode(regionCode));
     }
 
-    public RegionSearchResultDto getEcoProgramListByRegion(String regionName) throws SearchResultNotExistException{
+    public RegionSearchResultVO getEcoProgramListByRegion(String regionName) throws SearchResultNotExistException {
         return ecoProgramElasticRepository.findByRegionName(regionName);
     }
 
-    public KeywordSearchRegionCountResultDto getRegionCountByProgramInfoKeyword(String keyword) {
+    public KeywordSearchRegionCountResultVO getRegionCountByProgramInfoKeyword(String keyword) {
         return ecoProgramElasticRepository.findRegionCountByProgramInfoKeyword(keyword);
     }
 
-    public KeywordFrequencyResultDto getFrequencyByProgramDetailInfoKeyword(String keyword) {
+    public KeywordFrequencyResultVO getFrequencyByProgramDetailInfoKeyword(String keyword) {
         return ecoProgramElasticRepository.findFrequencyByProgramDetailInfoKeyword(keyword);
     }
 
-    public RecommendProgramDto recommendProgramByRegionAndKeyword(String region, String keyword) throws SearchResultNotExistException {
+    public RecommendProgramVO recommendProgramByRegionAndKeyword(String region, String keyword) throws SearchResultNotExistException {
         return ecoProgramElasticRepository.findProgramByRegionAndKeyword(region, keyword);
     }
+
 }

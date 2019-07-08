@@ -12,16 +12,16 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @AllArgsConstructor
-public class KeywordSearchRegionCountResultDto {
+public class KeywordSearchRegionCountResultVO {
 
     private String keyword;
 
     private List<Program> programs;
 
-    static KeywordSearchRegionCountResultDto of(String keyword, SearchResponse response) {
+    static KeywordSearchRegionCountResultVO of(String keyword, SearchResponse response) {
         List<Program> programs = ((Terms) response.getAggregations().get("byRegionName"))
                 .getBuckets().stream().map(Program::of).collect(Collectors.toList());
-        return new KeywordSearchRegionCountResultDto(keyword, programs);
+        return new KeywordSearchRegionCountResultVO(keyword, programs);
     }
 
     @Getter

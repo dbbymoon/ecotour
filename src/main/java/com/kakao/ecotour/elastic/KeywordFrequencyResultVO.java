@@ -8,13 +8,13 @@ import org.elasticsearch.action.search.SearchResponse;
 @Getter
 @Setter
 @AllArgsConstructor
-public class KeywordFrequencyResultDto {
+public class KeywordFrequencyResultVO {
 
     private String keyword;
 
     private long count;
 
-    static KeywordFrequencyResultDto of(String keyword, SearchResponse response) {
-        return new KeywordFrequencyResultDto(keyword, response.getHits().getTotalHits());
+    static KeywordFrequencyResultVO of(String keyword, SearchResponse response) {
+        return new KeywordFrequencyResultVO(keyword, response.getHits().getTotalHits());
     }
 }

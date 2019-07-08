@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface EcoProgramSearchRepository {
 
-    List<EcoProgramDto> findByRegionCode(String regionCode);
+    List<EcoProgramDocument> findByRegionCode(String regionCode);
 
-    RegionSearchResultDto findByRegionName(String regionName);
+    RegionSearchResultVO findByRegionName(String regionName);
 
-    KeywordSearchRegionCountResultDto findRegionCountByProgramInfoKeyword(String keyword);
+    KeywordSearchRegionCountResultVO findRegionCountByProgramInfoKeyword(String keyword);
 
-    KeywordFrequencyResultDto findFrequencyByProgramDetailInfoKeyword(String keyword);
+    KeywordFrequencyResultVO findFrequencyByProgramDetailInfoKeyword(String keyword);
 
-    RecommendProgramDto findProgramByRegionAndKeyword(String region, String keyword);
+    RecommendProgramVO findProgramByRegionAndKeyword(String region, String keyword);
 
 }

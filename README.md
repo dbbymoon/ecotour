@@ -47,7 +47,7 @@ Output : Program
 
 HTTP Method : GET
 
-URI : /programs/region/{regionCode}
+URI : /programs/regionEntity/{regionCode}
 
 Input :
 
@@ -88,7 +88,7 @@ HTTP Method : GET
 
 URI : /programs/search
 
-Input : region 지역 이름
+Input : regionEntity 지역 이름
 
 Output : 서비스 지역 코드, 프로그램 정보(프로그램명, 테마) 목록
 
@@ -99,7 +99,7 @@ Output : 서비스 지역 코드, 프로그램 정보(프로그램명, 테마) �
 
 HTTP Method : GET
 
-URI : /programs/count/region
+URI : /programs/count/regionEntity
 
 Input : keyword 검색 키워드
 
@@ -129,6 +129,6 @@ HTTP Method : GET
 
 URI : /programs/recommend
 
-Input : keyword 검색 키워드, region 지역명
+Input : keyword 검색 키워드, regionEntity 지역명
 
 Output : 프로그램 코드

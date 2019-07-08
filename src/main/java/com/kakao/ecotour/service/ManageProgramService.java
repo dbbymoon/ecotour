@@ -1,11 +1,11 @@
 package com.kakao.ecotour.service;
 
-import com.kakao.ecotour.controller.EcoProgramCsv;
-import com.kakao.ecotour.elastic.EcoProgramDto;
+import com.kakao.ecotour.controller.EcoProgramCSV;
+import com.kakao.ecotour.elastic.EcoProgramDocument;
 import com.kakao.ecotour.elastic.EcoProgramElasticRepository;
-import com.kakao.ecotour.jpa.EcoProgram;
+import com.kakao.ecotour.jpa.EcoProgramEntity;
 import com.kakao.ecotour.jpa.EcoProgramRepository;
-import com.kakao.ecotour.jpa.Region;
+import com.kakao.ecotour.jpa.RegionEntity;
 import com.kakao.ecotour.jpa.RegionRepository;
 import com.kakao.ecotour.kakaoapi.APISearchAddressService;
 import org.springframework.stereotype.Service;
@@ -31,23 +31,22 @@ public class ManageProgramService {
         this.ecoProgramElasticRepository = ecoProgramElasticRepository;
     }
 
-    public void saveEcoProgram(EcoProgramCsv ecoProgramCsv) {
+    public void saveEcoProgram(EcoProgramCSV ecoProgramCSV) {
         // DB save
-        Region region = saveRegion(ecoProgramCsv.getRegion());
-        EcoProgram ecoProgram = ecoProgramRepository.save(EcoProgram.of(ecoProgramCsv, region));
+        RegionEntity regionEntity = saveRegion(ecoProgramCSV.getRegion());
+        EcoProgramEntity ecoProgramEntity = ecoProgramRepository.save(EcoProgramEntity.of(ecoProgramCSV, regionEntity));
         // ES save
-        ecoProgramElasticRepository.save(EcoProgramDto.of(ecoProgram));
+        ecoProgramElasticRepository.save(EcoProgramDocument.of(ecoProgramEntity));
     }
 
 
-    public Region saveRegion(String address) {
+    public RegionEntity saveRegion(String address) {
 
-        Region region = APISearchAddressService.getRegion(address);
+        RegionEntity regionEntity = APISearchAddressService.getRegion(address);
 
-        return regionRepository.findByRegionName(region.getRegionName())
-                .orElseGet(() -> regionRepository.save(region));
+        return regionRepository.findByRegionName(regionEntity.getRegionName())
+                .orElseGet(() -> regionRepository.save(regionEntity));
 
     }
-
 
 }

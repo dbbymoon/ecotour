@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RegionSearchResultDto {
+public class RegionSearchResultVO {
 
-    private String region;  // Region Code
+    private String region;  // RegionEntity Code
 
     private List<Program> programs;
 
-    public static RegionSearchResultDto of(SearchResponse response) throws SearchResultNotExistException{
+    public static RegionSearchResultVO of(SearchResponse response) throws SearchResultNotExistException{
 
         SearchHit[] hits = response.getHits().getHits();
 
@@ -32,7 +32,7 @@ public class RegionSearchResultDto {
                     .map(hit -> Program.of(hit.getSourceAsMap()))
                     .collect(Collectors.toList());
 
-            return new RegionSearchResultDto(regionCode, programs);
+            return new RegionSearchResultVO(regionCode, programs);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new SearchResultNotExistException();
         }

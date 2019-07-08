@@ -1,7 +1,7 @@
 package com.kakao.ecotour.jpa;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kakao.ecotour.controller.EcoProgramCsv;
+import com.kakao.ecotour.controller.EcoProgramCSV;
 import com.kakao.ecotour.util.ModelMapperUtils;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "prgmSeq", callSuper = false)
 @Table(name = "eco_program")
-public class EcoProgram {
+public class EcoProgramEntity {
 
     @Id
     @Column(nullable = false)
@@ -31,7 +31,7 @@ public class EcoProgram {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "region_seq")
-    private Region regionCity;  // 서비스 지역
+    private RegionEntity regionEntityCity;  // 서비스 지역
 
     @Column(nullable = false)
     private String region;      // 서비스 지역
@@ -51,10 +51,10 @@ public class EcoProgram {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedDatetime;
 
-    public static EcoProgram of(EcoProgramCsv ecoProgramCsv, Region region) {
-        EcoProgram ecoProgram = ModelMapperUtils.getModelMapper().map(ecoProgramCsv, EcoProgram.class);
-        ecoProgram.setRegionCity(region);
-        return ecoProgram;
+    public static EcoProgramEntity of(EcoProgramCSV ecoProgramCSV, RegionEntity regionEntity) {
+        EcoProgramEntity ecoProgramEntity = ModelMapperUtils.getModelMapper().map(ecoProgramCSV, EcoProgramEntity.class);
+        ecoProgramEntity.setRegionEntityCity(regionEntity);
+        return ecoProgramEntity;
     }
 
 }

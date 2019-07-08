@@ -27,14 +27,14 @@ public class ManageProgramController {
 
     @PostMapping
     @ApiOperation(value = "생태 관광 프로그램 추가")
-    public void saveEcoProgram(@RequestBody EcoProgramCsv ecoProgramCsv) throws JSONException {
-        manageProgramService.saveEcoProgram(ecoProgramCsv);
+    public void saveEcoProgram(@RequestBody EcoProgramCSV ecoProgramCSV) throws JSONException {
+        manageProgramService.saveEcoProgram(ecoProgramCSV);
     }
 
     @PutMapping("/{prgmSeq}")
     @ApiOperation(value = "생태 관광 프로그램 수정")
-    public void updateEcoProgram(@RequestBody EcoProgramCsv ecoProgramCsv) throws JSONException {
-        manageProgramService.saveEcoProgram(ecoProgramCsv);
+    public void updateEcoProgram(@RequestBody EcoProgramCSV ecoProgramCSV) throws JSONException {
+        manageProgramService.saveEcoProgram(ecoProgramCSV);
     }
 
     @PostMapping("/load")
@@ -45,12 +45,12 @@ public class ManageProgramController {
         InputStreamReader isr = new InputStreamReader(new FileInputStream(fileName), "euc-kr");
         CSVReader reader = new CSVReader(isr);
 
-        List<EcoProgramCsv> ecoProgramCsvList = new CsvToBeanBuilder<EcoProgramCsv>(reader)
-                .withType(EcoProgramCsv.class)
+        List<EcoProgramCSV> ecoProgramCSVList = new CsvToBeanBuilder<EcoProgramCSV>(reader)
+                .withType(EcoProgramCSV.class)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build().parse();
 
-        ecoProgramCsvList.forEach(manageProgramService::saveEcoProgram);
+        ecoProgramCSVList.forEach(manageProgramService::saveEcoProgram);
 
     }
 }

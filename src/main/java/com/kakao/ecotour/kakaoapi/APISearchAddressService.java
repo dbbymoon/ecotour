@@ -1,7 +1,7 @@
 package com.kakao.ecotour.kakaoapi;
 
 import com.kakao.ecotour.exception.APINotFoundAddressException;
-import com.kakao.ecotour.jpa.Region;
+import com.kakao.ecotour.jpa.RegionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -23,8 +23,8 @@ public class APISearchAddressService {
     @Value("${kakao.api.url}")
     private String apiUrl;
 
-    // Region 반환
-    public Region getRegion(String address) {
+    // RegionEntity 반환
+    public RegionEntity getRegion(String address) {
 
         String[] addressArr = address.split(" ");
         String regionName = addressArr.length < 2 ? addressArr[0] : addressArr[0] + " " + addressArr[1];
@@ -37,7 +37,7 @@ public class APISearchAddressService {
                             .orElseThrow(APINotFoundAddressException::new));
         } catch (APINotFoundAddressException e) {
             log.debug(e.getMessage());
-            return new Region("reg" + address.hashCode(), address);
+            return new RegionEntity("reg" + address.hashCode(), address);
         }
 
     }

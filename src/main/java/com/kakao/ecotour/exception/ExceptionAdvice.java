@@ -7,14 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @ControllerAdvice
-public class ExceptionAdvice {
-        //extends ResponseEntityExceptionHandler {
-/*
+public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+
     @ExceptionHandler(ProgramNotFoundException.class)
     public ResponseEntity<String> programNotFoundException(ProgramNotFoundException e) {
         log.error(e.getMessage());
@@ -26,5 +22,5 @@ public class ExceptionAdvice {
         log.error(e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
     }
-*/
+
 }

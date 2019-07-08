@@ -9,15 +9,15 @@ import org.elasticsearch.action.search.SearchResponse;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RecommendProgramDto {
+public class RecommendProgramVO {
 
     private String program;     // 프로그램 코드
 
-    public static RecommendProgramDto of(SearchResponse response) throws SearchResultNotExistException {
+    public static RecommendProgramVO of(SearchResponse response) throws SearchResultNotExistException {
 
         try {
             String id = response.getHits().getHits()[0].getId();
-            return new RecommendProgramDto("prgm" + id);
+            return new RecommendProgramVO("prgm" + id);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new SearchResultNotExistException();
         }

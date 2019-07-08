@@ -1,7 +1,7 @@
 package com.kakao.ecotour.elastic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.kakao.ecotour.jpa.EcoProgram;
+import com.kakao.ecotour.jpa.EcoProgramEntity;
 import com.kakao.ecotour.util.ModelMapperUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @ToString
 @NoArgsConstructor(onConstructor = @__({@JsonCreator}))
 @Document(indexName = "program", type = "eco_program")
-@Setting(settingPath = "/ngram-analyzer.json")
-public class EcoProgramDto {
+@Setting(settingPath = "/elastic/analyzer-settings.json")
+public class EcoProgramDocument {
 
     @Id
     private long prgmSeq;
@@ -47,16 +47,16 @@ public class EcoProgramDto {
     @Field(type = FieldType.Text, analyzer = "ngram_analyzer")
     private String prgmDetailInfo = "";
 
-    public static EcoProgramDto of(EcoProgram ecoProgram) {
-        EcoProgramDto ecoProgramDto = ModelMapperUtils.getModelMapper().map(ecoProgram, EcoProgramDto.class);
-        ecoProgramDto.setRegionCode(ecoProgram.getRegionCity().getRegionCode());
-        ecoProgramDto.setRegionName(ecoProgram.getRegionCity().getRegionName());
-        return ecoProgramDto;
+    public static EcoProgramDocument of(EcoProgramEntity ecoProgramEntity) {
+        EcoProgramDocument ecoProgramDocument = ModelMapperUtils.getModelMapper().map(ecoProgramEntity, EcoProgramDocument.class);
+        ecoProgramDocument.setRegionCode(ecoProgramEntity.getRegionEntityCity().getRegionCode());
+        ecoProgramDocument.setRegionName(ecoProgramEntity.getRegionEntityCity().getRegionName());
+        return ecoProgramDocument;
     }
 
-    public static List<EcoProgramDto> of(List<EcoProgram> ecoProgramList) {
-        return ecoProgramList.stream()
-                .map(EcoProgramDto::of)
+    public static List<EcoProgramDocument> of(List<EcoProgramEntity> ecoProgramEntityList) {
+        return ecoProgramEntityList.stream()
+                .map(EcoProgramDocument::of)
                 .collect(Collectors.toList());
     }
 

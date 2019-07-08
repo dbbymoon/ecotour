@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "regionSeq", callSuper = false)
 @Table(name = "region")
-public class Region {
+public class RegionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,10 +25,10 @@ public class Region {
     @Column(nullable = false)
     private String regionName;  // 서비스 지역 이름
 
-    @OneToMany(mappedBy = "regionCity")
-    private List<EcoProgram> ecoProgramList;
+    @OneToMany(mappedBy = "regionEntityCity")
+    private List<EcoProgramEntity> ecoProgramEntityList;
 
-    public Region(String regionCode, String regionName) {
+    public RegionEntity(String regionCode, String regionName) {
         this.regionCode = regionCode;
         this.regionName = regionName;
     }

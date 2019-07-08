@@ -23,7 +23,7 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
     }
 
     @Override
-    public List<EcoProgramDto> findByRegionCode(String regionCode) {
+    public List<EcoProgramDocument> findByRegionCode(String regionCode) {
 
         SearchResponse response = client.prepareSearch()
                 .setQuery(QueryBuilders.matchQuery("regionCode", regionCode))
@@ -31,22 +31,22 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
                 .actionGet();
 
         return Arrays.stream(response.getHits().getHits())
-                .map(hit -> JSON.parseObject(hit.getSourceAsString(), EcoProgramDto.class))
+                .map(hit -> JSON.parseObject(hit.getSourceAsString(), EcoProgramDocument.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public RegionSearchResultDto findByRegionName(String regionName) throws SearchResultNotExistException{
+    public RegionSearchResultVO findByRegionName(String regionName) throws SearchResultNotExistException{
         SearchResponse response = client.prepareSearch()
                 .setQuery(QueryBuilders.matchQuery("region", regionName))
                 .execute()
                 .actionGet();
 
-        return RegionSearchResultDto.of(response);
+        return RegionSearchResultVO.of(response);
     }
 
     @Override
-    public KeywordSearchRegionCountResultDto findRegionCountByProgramInfoKeyword(String keyword) {
+    public KeywordSearchRegionCountResultVO findRegionCountByProgramInfoKeyword(String keyword) {
         SearchResponse response = client.prepareSearch()
                 .setQuery(QueryBuilders.termQuery("prgmInfo", keyword))
                 .addAggregation(AggregationBuilders.terms("byRegionName").field("regionName"))
@@ -54,11 +54,11 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
                 .execute()
                 .actionGet();
 
-        return KeywordSearchRegionCountResultDto.of(keyword, response);
+        return KeywordSearchRegionCountResultVO.of(keyword, response);
     }
 
     @Override
-    public KeywordFrequencyResultDto findFrequencyByProgramDetailInfoKeyword(String keyword) {
+    public KeywordFrequencyResultVO findFrequencyByProgramDetailInfoKeyword(String keyword) {
 
         SearchResponse response = client.prepareSearch()
                 .setQuery(QueryBuilders.termQuery("prgmDetailInfo", keyword))
@@ -66,11 +66,11 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
                 .execute()
                 .actionGet();
 
-        return KeywordFrequencyResultDto.of(keyword, response);
+        return KeywordFrequencyResultVO.of(keyword, response);
     }
 
     @Override
-    public RecommendProgramDto findProgramByRegionAndKeyword(String region, String keyword) throws SearchResultNotExistException {
+    public RecommendProgramVO findProgramByRegionAndKeyword(String region, String keyword) throws SearchResultNotExistException {
 
         final float regionScore = 10;
         final float keywordScore = 0.1f;
@@ -84,6 +84,6 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
                 .execute()
                 .actionGet();
 
-        return RecommendProgramDto.of(response);
+        return RecommendProgramVO.of(response);
     }
 }
