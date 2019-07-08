@@ -11,4 +11,7 @@ public interface EcoProgramSearchRepository {
     KeywordSearchRegionCountResultDto findRegionCountByProgramInfoKeyword(String keyword);
 
     KeywordFrequencyResultDto findFrequencyByProgramDetailInfoKeyword(String keyword);
+
+    RecommendProgramDto findProgramByRegionAndKeyword(String region, String keyword);
+
 }

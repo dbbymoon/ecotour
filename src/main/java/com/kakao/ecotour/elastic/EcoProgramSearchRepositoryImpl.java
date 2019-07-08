@@ -3,6 +3,7 @@ package com.kakao.ecotour.elastic;
 import com.alibaba.fastjson.JSON;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.springframework.stereotype.Repository;
@@ -65,5 +66,24 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
                 .actionGet();
 
         return KeywordFrequencyResultDto.of(keyword, response);
+    }
+
+    @Override
+    public RecommendProgramDto findProgramByRegionAndKeyword(String region, String keyword) {
+
+        final float regionScore = 10;
+        final float keywordScore = 0.1f;
+
+        QueryBuilder queryBuilder = QueryBuilders.disMaxQuery()
+                .add(QueryBuilders.multiMatchQuery(region, "region").boost(regionScore))
+                .add(QueryBuilders.multiMatchQuery(keyword, "theme^2", "prgmInfo^3", "prgmDetailInfo").boost(keywordScore));
+
+        SearchResponse response = client.prepareSearch()
+                .setQuery(queryBuilder)
+                .setSize(0)
+                .execute()
+                .actionGet();
+
+        return RecommendProgramDto.of(response);
     }
 }

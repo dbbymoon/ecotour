@@ -1,18 +1,19 @@
 package com.kakao.ecotour.elastic;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 public class RegionSearchResultDto {
 
     private String region;  // Region Code
@@ -20,15 +21,16 @@ public class RegionSearchResultDto {
     private List<Program> programs;
 
     public static RegionSearchResultDto of(SearchResponse response) {
-        RegionSearchResultDto resultDto = new RegionSearchResultDto();
-        List<Program> programs = new ArrayList<>();
-        Arrays.stream(response.getHits().getHits())
-                .forEach(hit -> programs.add(Program.of(hit.getSourceAsMap())));
-        if(!programs.isEmpty()) {
-            resultDto.setRegion((String) response.getHits().getHits()[0].getSourceAsMap().get("regionCode"));
-            resultDto.setPrograms(programs);
-        }
-        return resultDto;
+
+        SearchHit[] hits = response.getHits().getHits();
+
+        List<Program> programs = Arrays.stream(hits)
+                .map(hit -> Program.of(hit.getSourceAsMap()))
+                .collect(Collectors.toList());
+
+        String regionCode = programs.isEmpty() ? "No Result" : (String) hits[0].getSourceAsMap().get("regionCode");
+
+        return new RegionSearchResultDto(regionCode, programs);
     }
 
     @Getter
@@ -42,7 +44,7 @@ public class RegionSearchResultDto {
         static Program of(Map<String, Object> sourceMap) {
             Program program = new Program();
             program.setPrgmName((String) sourceMap.get("prgmName"));
-            program.setTheme((String)sourceMap.get("theme"));
+            program.setTheme((String) sourceMap.get("theme"));
             return program;
         }
     }

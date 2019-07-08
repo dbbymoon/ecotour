@@ -2,7 +2,6 @@ package com.kakao.ecotour.elastic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@AllArgsConstructor
 public class KeywordSearchRegionCountResultDto {
 
     private String keyword;
@@ -20,15 +19,11 @@ public class KeywordSearchRegionCountResultDto {
     private List<Program> programs;
 
     static KeywordSearchRegionCountResultDto of(String keyword, SearchResponse response) {
-        KeywordSearchRegionCountResultDto resultDto = new KeywordSearchRegionCountResultDto();
-        Terms terms = response.getAggregations().get("byRegionName");
-        resultDto.setPrograms(terms.getBuckets().stream().map(Program::of).collect(Collectors.toList()));
-        resultDto.setKeyword(keyword);
-        return resultDto;
+        List<Program> programs = ((Terms) response.getAggregations().get("byRegionName"))
+                .getBuckets().stream().map(Program::of).collect(Collectors.toList());
+        return new KeywordSearchRegionCountResultDto(keyword, programs);
     }
 
-    @Getter
-    @Setter
     @AllArgsConstructor
     private static class Program {
 

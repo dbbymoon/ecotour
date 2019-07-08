@@ -47,6 +47,6 @@ public class SearchProgramService {
     }
 
     public RecommendProgramDto recommendProgramByRegionAndKeyword(String region, String keyword) {
-        return null;
+        return ecoProgramElasticRepository.findProgramByRegionAndKeyword(region, keyword);
     }
 }
