@@ -1,5 +1,6 @@
 package com.kakao.ecotour.elastic;
 
+import com.kakao.ecotour.exception.SearchResultNotExistException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,17 +21,22 @@ public class RegionSearchResultDto {
 
     private List<Program> programs;
 
-    public static RegionSearchResultDto of(SearchResponse response) {
+    public static RegionSearchResultDto of(SearchResponse response) throws SearchResultNotExistException{
 
         SearchHit[] hits = response.getHits().getHits();
 
-        List<Program> programs = Arrays.stream(hits)
-                .map(hit -> Program.of(hit.getSourceAsMap()))
-                .collect(Collectors.toList());
+        try {
+            String regionCode = (String) hits[0].getSourceAsMap().get("regionCode");
 
-        String regionCode = programs.isEmpty() ? "No Result" : (String) hits[0].getSourceAsMap().get("regionCode");
+            List<Program> programs = Arrays.stream(hits)
+                    .map(hit -> Program.of(hit.getSourceAsMap()))
+                    .collect(Collectors.toList());
 
-        return new RegionSearchResultDto(regionCode, programs);
+            return new RegionSearchResultDto(regionCode, programs);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new SearchResultNotExistException();
+        }
+
     }
 
     @Getter

@@ -36,7 +36,7 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
     }
 
     @Override
-    public RegionSearchResultDto findByRegionName(String regionName) {
+    public RegionSearchResultDto findByRegionName(String regionName) throws SearchResultNotExistException{
         SearchResponse response = client.prepareSearch()
                 .setQuery(QueryBuilders.matchQuery("region", regionName))
                 .execute()

@@ -44,7 +44,7 @@ public class SearchProgramController {
 
     @GetMapping("/search")
     @ApiOperation(value = "프로그램 조회 by 서비스 지역")
-    public RegionSearchResultDto getEcoProgramListByRegion(@RequestParam("region") String region) {
+    public RegionSearchResultDto getEcoProgramListByRegion(@RequestParam("region") String region) throws SearchResultNotExistException {
         return searchProgramService.getEcoProgramListByRegion(region);
     }
 
