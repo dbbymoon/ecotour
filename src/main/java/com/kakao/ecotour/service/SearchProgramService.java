@@ -1,11 +1,12 @@
 package com.kakao.ecotour.service;
 
+import com.kakao.ecotour.controller.EcoProgramCsv;
 import com.kakao.ecotour.elastic.*;
 import com.kakao.ecotour.exception.ProgramNotFoundException;
+import com.kakao.ecotour.jpa.EcoProgramRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -14,22 +15,23 @@ public class SearchProgramService {
 
     private final EcoProgramElasticRepository ecoProgramElasticRepository;
 
-    public SearchProgramService(EcoProgramElasticRepository ecoProgramElasticRepository) {
+    private final EcoProgramRepository ecoProgramRepository;
+
+    public SearchProgramService(EcoProgramElasticRepository ecoProgramElasticRepository, EcoProgramRepository ecoProgramRepository) {
         this.ecoProgramElasticRepository = ecoProgramElasticRepository;
+        this.ecoProgramRepository = ecoProgramRepository;
     }
 
-    public EcoProgramDto getEcoProgram(long id) {
-        return ecoProgramElasticRepository.findById(id).orElseThrow(ProgramNotFoundException::new);
+    public EcoProgramCsv getEcoProgram(long id) throws ProgramNotFoundException{
+        return EcoProgramCsv.of(ecoProgramRepository.findById(id).orElseThrow(ProgramNotFoundException::new));
     }
 
-    public List<EcoProgramDto> getEcoProgramList() {
-        List<EcoProgramDto> ecoProgramDtoList = new ArrayList<>();
-        ecoProgramElasticRepository.findAll().forEach(ecoProgramDtoList::add);
-        return ecoProgramDtoList;
+    public List<EcoProgramCsv> getEcoProgramList() {
+        return EcoProgramCsv.of(ecoProgramRepository.findAll());
     }
 
-    public List<EcoProgramDto> getEcoProgramListByRegionCode(String regionCode) {
-        return ecoProgramElasticRepository.findByRegionCode(regionCode);
+    public List<EcoProgramCsv> getEcoProgramListByRegionCode(String regionCode) {
+        return EcoProgramCsv.ofDto(ecoProgramElasticRepository.findByRegionCode(regionCode));
     }
 
     public RegionSearchResultDto getEcoProgramListByRegion(String regionName) {

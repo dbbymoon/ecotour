@@ -7,7 +7,7 @@ import com.kakao.ecotour.jpa.EcoProgram;
 import com.kakao.ecotour.jpa.EcoProgramRepository;
 import com.kakao.ecotour.jpa.Region;
 import com.kakao.ecotour.jpa.RegionRepository;
-import com.kakao.ecotour.kakaoapi.SearchAddressService;
+import com.kakao.ecotour.kakaoapi.APISearchAddressService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ManageProgramService {
 
-    private final SearchAddressService searchAddressService;
+    private final APISearchAddressService APISearchAddressService;
 
     private final EcoProgramRepository ecoProgramRepository;
 
@@ -23,27 +23,26 @@ public class ManageProgramService {
 
     private final EcoProgramElasticRepository ecoProgramElasticRepository;
 
-    public ManageProgramService(SearchAddressService searchAddressService, EcoProgramRepository ecoProgramRepository,
+    public ManageProgramService(APISearchAddressService APISearchAddressService, EcoProgramRepository ecoProgramRepository,
                                 RegionRepository regionRepository, EcoProgramElasticRepository ecoProgramElasticRepository) {
-        this.searchAddressService = searchAddressService;
+        this.APISearchAddressService = APISearchAddressService;
         this.ecoProgramRepository = ecoProgramRepository;
         this.regionRepository = regionRepository;
         this.ecoProgramElasticRepository = ecoProgramElasticRepository;
     }
 
-    public EcoProgramDto saveEcoProgram(EcoProgramCsv ecoProgramCsv) {
+    public void saveEcoProgram(EcoProgramCsv ecoProgramCsv) {
         // DB save
         Region region = saveRegion(ecoProgramCsv.getRegion());
         EcoProgram ecoProgram = ecoProgramRepository.save(EcoProgram.of(ecoProgramCsv, region));
         // ES save
-        EcoProgramDto ecoProgramDto = ecoProgramElasticRepository.save(EcoProgramDto.of(ecoProgram));
-        return ecoProgramDto;
+        ecoProgramElasticRepository.save(EcoProgramDto.of(ecoProgram));
     }
 
 
     public Region saveRegion(String address) {
 
-        Region region = searchAddressService.getRegion(address);
+        Region region = APISearchAddressService.getRegion(address);
 
         return regionRepository.findByRegionName(region.getRegionName())
                 .orElseGet(() -> regionRepository.save(region));

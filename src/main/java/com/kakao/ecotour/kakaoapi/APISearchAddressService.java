@@ -1,6 +1,6 @@
 package com.kakao.ecotour.kakaoapi;
 
-import com.kakao.ecotour.exception.ApiNotFoundAddressException;
+import com.kakao.ecotour.exception.APINotFoundAddressException;
 import com.kakao.ecotour.jpa.Region;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 @PropertySource("classpath:/kakaoapi.properties")
-public class SearchAddressService {
+public class APISearchAddressService {
 
     @Value("${kakao.api.key}")
     private String apiKey;
@@ -29,13 +29,13 @@ public class SearchAddressService {
         String[] addressArr = address.split(" ");
         String regionName = addressArr.length < 2 ? addressArr[0] : addressArr[0] + " " + addressArr[1];
 
-        ResponseVO response = getResponse(regionName);
+        APIResponseVO response = getResponse(regionName);
 
         try {
             return response.getRegion()
                     .orElseGet(() -> getResponse(addressArr[0]).getRegion()
-                            .orElseThrow(ApiNotFoundAddressException::new));
-        } catch (ApiNotFoundAddressException e) {
+                            .orElseThrow(APINotFoundAddressException::new));
+        } catch (APINotFoundAddressException e) {
             log.debug(e.getMessage());
             return new Region("reg" + address.hashCode(), address);
         }
@@ -43,10 +43,10 @@ public class SearchAddressService {
     }
 
     // REST API 요청
-    private ResponseVO getResponse(String regionName) {
+    private APIResponseVO getResponse(String regionName) {
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<ResponseVO> response
-                = restTemplate.exchange(apiUrl + regionName, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ResponseVO.class);
+        HttpEntity<APIResponseVO> response
+                = restTemplate.exchange(apiUrl + regionName, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), APIResponseVO.class);
         return response.getBody();
     }
 

@@ -1,13 +1,13 @@
 package com.kakao.ecotour.controller;
 
 import com.kakao.ecotour.elastic.*;
+import com.kakao.ecotour.exception.ProgramNotFoundException;
 import com.kakao.ecotour.service.SearchProgramService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Api(value = "생태 관광 프로그램 검색")
 @RestController
@@ -22,19 +22,19 @@ public class SearchProgramController {
 
     @GetMapping
     @ApiOperation(value = "프로그램 목록 조회")
-    public List<EcoProgramDto> getEcoProgramList() {
+    public List<EcoProgramCsv> getEcoProgramList() {
         return searchProgramService.getEcoProgramList();
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "단일 프로그램 조회 by id")
-    public EcoProgramDto getEcoProgram(@PathVariable("id") long id) {
+    public EcoProgramCsv getEcoProgram(@PathVariable("id") long id) throws ProgramNotFoundException {
         return searchProgramService.getEcoProgram(id);
     }
 
     @GetMapping("/region/{regionCode}")
     @ApiOperation(value = "프로그램 조회 by 서비스 지역 코드")
-    public List<EcoProgramDto> getEcoProgramListByRegionCode(@PathVariable("regionCode") String regionCode) {
+    public List<EcoProgramCsv> getEcoProgramListByRegionCode(@PathVariable("regionCode") String regionCode) {
         return searchProgramService.getEcoProgramListByRegionCode(regionCode);
     }
 

@@ -46,8 +46,8 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
     @Override
     public KeywordSearchRegionCountResultDto findRegionCountByProgramInfoKeyword(String keyword) {
         SearchResponse response = client.prepareSearch()
-                .setQuery(QueryBuilders.matchQuery("prgmInfo", keyword))
-                .addAggregation(AggregationBuilders.terms("by_regionName").field("regionName"))
+                .setQuery(QueryBuilders.termQuery("prgmInfo", keyword))
+                .addAggregation(AggregationBuilders.terms("byRegionName").field("regionName"))
                 .setSize(0)
                 .execute()
                 .actionGet();
@@ -57,8 +57,9 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
 
     @Override
     public KeywordFrequencyResultDto findFrequencyByProgramDetailInfoKeyword(String keyword) {
+
         SearchResponse response = client.prepareSearch()
-                .setQuery(QueryBuilders.matchQuery("prgmDetailInfo", keyword))
+                .setQuery(QueryBuilders.termQuery("prgmDetailInfo", keyword))
                 .setSize(0)
                 .execute()
                 .actionGet();

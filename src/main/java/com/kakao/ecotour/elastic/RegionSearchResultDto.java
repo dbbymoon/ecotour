@@ -25,7 +25,7 @@ public class RegionSearchResultDto {
         Arrays.stream(response.getHits().getHits())
                 .forEach(hit -> programs.add(Program.of(hit.getSourceAsMap())));
         if(!programs.isEmpty()) {
-            resultDto.setRegion((String) response.getHits().getHits()[0].getSourceAsMap().get("regionName"));
+            resultDto.setRegion((String) response.getHits().getHits()[0].getSourceAsMap().get("regionCode"));
             resultDto.setPrograms(programs);
         }
         return resultDto;

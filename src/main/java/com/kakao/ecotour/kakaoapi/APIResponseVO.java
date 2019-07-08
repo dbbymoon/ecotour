@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
-class ResponseVO {
+class APIResponseVO {
 
     @JsonProperty
     private List<Document> documents;
@@ -34,7 +34,7 @@ class ResponseVO {
             private String b_code;
 
             Region getRegion() {
-                return new Region(b_code.substring(0, 5), address_name);
+                return new Region("reg"+b_code.substring(0, 5), address_name);
             }
 
         }

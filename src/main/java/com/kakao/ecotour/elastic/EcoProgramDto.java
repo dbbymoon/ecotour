@@ -1,14 +1,17 @@
 package com.kakao.ecotour.elastic;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.kakao.ecotour.jpa.EcoProgram;
 import com.kakao.ecotour.util.ModelMapperUtils;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +19,9 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor(onConstructor = @__({@JsonCreator}))
 @Document(indexName = "program", type = "eco_program")
+@Setting(settingPath = "/ngram-analyzer.json")
 public class EcoProgramDto {
 
     @Id
@@ -24,17 +29,22 @@ public class EcoProgramDto {
 
     private String prgmName;
 
+    @Field(type = FieldType.Text, analyzer = "ngram_analyzer")
     private String theme;
 
-    @Field(fielddata = true)
+    @Field(type = FieldType.Keyword)
     private String regionCode;
 
+    @Field(type = FieldType.Keyword)
     private String regionName;
 
+    @Field(type = FieldType.Text, analyzer = "ngram_analyzer")
     private String region;
 
+    @Field(type = FieldType.Text, analyzer = "ngram_analyzer")
     private String prgmInfo = "";
 
+    @Field(type = FieldType.Text, analyzer = "ngram_analyzer")
     private String prgmDetailInfo = "";
 
     public static EcoProgramDto of(EcoProgram ecoProgram) {

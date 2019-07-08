@@ -1,6 +1,5 @@
 package com.kakao.ecotour.controller;
 
-import com.kakao.ecotour.elastic.EcoProgramDto;
 import com.kakao.ecotour.service.ManageProgramService;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -28,14 +27,14 @@ public class ManageProgramController {
 
     @PostMapping
     @ApiOperation(value = "생태 관광 프로그램 추가")
-    public EcoProgramDto saveEcoProgram(@RequestBody EcoProgramCsv ecoProgramCsv) throws JSONException {
-        return manageProgramService.saveEcoProgram(ecoProgramCsv);
+    public void saveEcoProgram(@RequestBody EcoProgramCsv ecoProgramCsv) throws JSONException {
+        manageProgramService.saveEcoProgram(ecoProgramCsv);
     }
 
     @PutMapping("/{prgmSeq}")
     @ApiOperation(value = "생태 관광 프로그램 수정")
-    public EcoProgramDto updateEcoProgram(@RequestBody EcoProgramCsv ecoProgramCsv) throws JSONException {
-        return manageProgramService.saveEcoProgram(ecoProgramCsv);
+    public void updateEcoProgram(@RequestBody EcoProgramCsv ecoProgramCsv) throws JSONException {
+        manageProgramService.saveEcoProgram(ecoProgramCsv);
     }
 
     @PostMapping("/load")

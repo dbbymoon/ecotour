@@ -1,6 +1,6 @@
 package com.kakao.ecotour.exception;
 
-public class ApiNotFoundAddressException extends RuntimeException {
+public class APINotFoundAddressException extends RuntimeException {
     @Override
     public String getMessage() {
         return "API failed to search address";
