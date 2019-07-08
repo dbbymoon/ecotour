@@ -7,20 +7,15 @@ import com.kakao.ecotour.jpa.EcoProgram;
 import com.kakao.ecotour.jpa.EcoProgramRepository;
 import com.kakao.ecotour.jpa.Region;
 import com.kakao.ecotour.jpa.RegionRepository;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import com.kakao.ecotour.kakaoapi.SearchAddressService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @Transactional
 @Service
 public class ManageProgramService {
+
+    private final SearchAddressService searchAddressService;
 
     private final EcoProgramRepository ecoProgramRepository;
 
@@ -28,8 +23,9 @@ public class ManageProgramService {
 
     private final EcoProgramElasticRepository ecoProgramElasticRepository;
 
-    public ManageProgramService(EcoProgramRepository ecoProgramRepository, RegionRepository regionRepository,
-                                EcoProgramElasticRepository ecoProgramElasticRepository) {
+    public ManageProgramService(SearchAddressService searchAddressService, EcoProgramRepository ecoProgramRepository,
+                                RegionRepository regionRepository, EcoProgramElasticRepository ecoProgramElasticRepository) {
+        this.searchAddressService = searchAddressService;
         this.ecoProgramRepository = ecoProgramRepository;
         this.regionRepository = regionRepository;
         this.ecoProgramElasticRepository = ecoProgramElasticRepository;
@@ -37,61 +33,22 @@ public class ManageProgramService {
 
     public EcoProgramDto saveEcoProgram(EcoProgramCsv ecoProgramCsv) {
         // DB save
-        Region region = new Region();
-        try {
-            region = saveRegion(ecoProgramCsv.getRegion());
-        } catch (JSONException e) {}
-
+        Region region = saveRegion(ecoProgramCsv.getRegion());
         EcoProgram ecoProgram = ecoProgramRepository.save(EcoProgram.of(ecoProgramCsv, region));
         // ES save
         EcoProgramDto ecoProgramDto = ecoProgramElasticRepository.save(EcoProgramDto.of(ecoProgram));
         return ecoProgramDto;
     }
 
-    public JSONObject getRegion(String address) throws JSONException {
 
-        String[] addressArr = address.split(" ");
-        String regionName = addressArr.length < 2 ? addressArr[0] : addressArr[0] + " " + addressArr[1];
+    public Region saveRegion(String address) {
 
-        final String kakaoApiKey = "KakaoAK 06d5b3ce748adc9daebf56edad7b5876";
-        final String url = "https://dapi.kakao.com/v2/local/search/address.json?query=";
+        Region region = searchAddressService.getRegion(address);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", kakaoApiKey);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> response = restTemplate.exchange(url + regionName, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-        JSONArray json = new JSONObject(response.getBody()).getJSONArray("documents");
-        if (json.length() == 0 && addressArr.length > 2) {
-            regionName = regionName.split(" ")[0];
-            response = restTemplate.exchange(url + regionName, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-        }
-        json = new JSONObject(response.getBody()).getJSONArray("documents");
-
-        if (json.length() == 0) {
-            // 검색 결과 없음
-            return null;
-        } else {
-            return json.getJSONObject(0).getJSONObject("address");
-        }
+        return regionRepository.findByRegionName(region.getRegionName())
+                .orElseGet(() -> regionRepository.save(region));
 
     }
 
-    protected Region saveRegion(String address) throws JSONException {
-
-        JSONObject regionJsonObject = getRegion(address);
-
-        String regionCode = ((String) regionJsonObject.get("b_code")).substring(0, 5);
-        String[] addressArr = ((String) regionJsonObject.get("address_name")).split(" ");
-
-        String regionName = addressArr.length > 1 ? addressArr[0] : addressArr[0] + " " + addressArr[1];
-
-        Region region = regionRepository.findByRegionName(regionName)
-                .orElseGet(() -> regionRepository.save(new Region(regionCode, regionName)));
-
-        return region;
-    }
 
 }
