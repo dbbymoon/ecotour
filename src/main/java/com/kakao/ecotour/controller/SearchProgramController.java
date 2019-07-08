@@ -1,7 +1,11 @@
 package com.kakao.ecotour.controller;
 
-import com.kakao.ecotour.elastic.*;
+import com.kakao.ecotour.elastic.KeywordFrequencyResultDto;
+import com.kakao.ecotour.elastic.KeywordSearchRegionCountResultDto;
+import com.kakao.ecotour.elastic.RecommendProgramDto;
+import com.kakao.ecotour.elastic.RegionSearchResultDto;
 import com.kakao.ecotour.exception.ProgramNotFoundException;
+import com.kakao.ecotour.exception.SearchResultNotExistException;
 import com.kakao.ecotour.service.SearchProgramService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,7 +62,7 @@ public class SearchProgramController {
 
     @GetMapping("/recommend")
     @ApiOperation(value = "프로그램 추천 by 서비스 지역, 키워드")
-    public RecommendProgramDto recommendProgramByRegionAndKeyword(@RequestParam("region") String region, @RequestParam("keyword") String keyword) {
+    public RecommendProgramDto recommendProgramByRegionAndKeyword(@RequestParam("region") String region, @RequestParam("keyword") String keyword) throws SearchResultNotExistException {
         return searchProgramService.recommendProgramByRegionAndKeyword(region, keyword);
     }
 

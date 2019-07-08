@@ -24,6 +24,8 @@ public class KeywordSearchRegionCountResultDto {
         return new KeywordSearchRegionCountResultDto(keyword, programs);
     }
 
+    @Getter
+    @Setter
     @AllArgsConstructor
     private static class Program {
 

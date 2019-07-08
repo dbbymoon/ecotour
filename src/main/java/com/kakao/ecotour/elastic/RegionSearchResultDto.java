@@ -35,6 +35,7 @@ public class RegionSearchResultDto {
 
     @Getter
     @Setter
+    @AllArgsConstructor
     private static class Program {
 
         private String prgmName;   // 프로그램명
@@ -42,10 +43,7 @@ public class RegionSearchResultDto {
         private String theme;   // 테마
 
         static Program of(Map<String, Object> sourceMap) {
-            Program program = new Program();
-            program.setPrgmName((String) sourceMap.get("prgmName"));
-            program.setTheme((String) sourceMap.get("theme"));
-            return program;
+            return new Program((String) sourceMap.get("prgmName"), (String) sourceMap.get("theme"));
         }
     }
 }

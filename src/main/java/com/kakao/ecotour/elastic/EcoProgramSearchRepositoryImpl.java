@@ -1,6 +1,7 @@
 package com.kakao.ecotour.elastic;
 
 import com.alibaba.fastjson.JSON;
+import com.kakao.ecotour.exception.SearchResultNotExistException;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -69,18 +70,17 @@ public class EcoProgramSearchRepositoryImpl implements EcoProgramSearchRepositor
     }
 
     @Override
-    public RecommendProgramDto findProgramByRegionAndKeyword(String region, String keyword) {
+    public RecommendProgramDto findProgramByRegionAndKeyword(String region, String keyword) throws SearchResultNotExistException {
 
         final float regionScore = 10;
         final float keywordScore = 0.1f;
 
         QueryBuilder queryBuilder = QueryBuilders.disMaxQuery()
-                .add(QueryBuilders.multiMatchQuery(region, "region").boost(regionScore))
-                .add(QueryBuilders.multiMatchQuery(keyword, "theme^2", "prgmInfo^3", "prgmDetailInfo").boost(keywordScore));
+                .add(QueryBuilders.matchQuery("region", region).boost(regionScore))
+                .add(QueryBuilders.multiMatchQuery(keyword, "theme^3", "prgmInfo^2", "prgmDetailInfo").boost(keywordScore));
 
         SearchResponse response = client.prepareSearch()
                 .setQuery(queryBuilder)
-                .setSize(0)
                 .execute()
                 .actionGet();
 

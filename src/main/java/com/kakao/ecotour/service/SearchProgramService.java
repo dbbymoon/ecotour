@@ -3,6 +3,7 @@ package com.kakao.ecotour.service;
 import com.kakao.ecotour.controller.EcoProgramCsv;
 import com.kakao.ecotour.elastic.*;
 import com.kakao.ecotour.exception.ProgramNotFoundException;
+import com.kakao.ecotour.exception.SearchResultNotExistException;
 import com.kakao.ecotour.jpa.EcoProgramRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class SearchProgramService {
         this.ecoProgramRepository = ecoProgramRepository;
     }
 
-    public EcoProgramCsv getEcoProgram(long id) throws ProgramNotFoundException{
+    public EcoProgramCsv getEcoProgram(long id) throws ProgramNotFoundException {
         return EcoProgramCsv.of(ecoProgramRepository.findById(id).orElseThrow(ProgramNotFoundException::new));
     }
 
@@ -46,7 +47,7 @@ public class SearchProgramService {
         return ecoProgramElasticRepository.findFrequencyByProgramDetailInfoKeyword(keyword);
     }
 
-    public RecommendProgramDto recommendProgramByRegionAndKeyword(String region, String keyword) {
+    public RecommendProgramDto recommendProgramByRegionAndKeyword(String region, String keyword) throws SearchResultNotExistException {
         return ecoProgramElasticRepository.findProgramByRegionAndKeyword(region, keyword);
     }
 }

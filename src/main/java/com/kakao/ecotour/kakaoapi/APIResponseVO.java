@@ -31,10 +31,10 @@ class APIResponseVO {
             private String address_name;
 
             @JsonProperty
-            private String b_code;
+            private String h_code;
 
             Region getRegion() {
-                return new Region("reg"+b_code.substring(0, 5), address_name);
+                return new Region("reg"+h_code.substring(0, 5), address_name);
             }
 
         }
