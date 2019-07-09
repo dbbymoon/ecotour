@@ -1,7 +1,7 @@
 package com.kakao.ecotour.jpa;
 
-import com.kakao.ecotour.util.ModelMapperUtils;
 import com.kakao.ecotour.kakaoapi.RegionInfoRefiner;
+import com.kakao.ecotour.util.ModelMapperUtils;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,12 +22,12 @@ public class RegionEntity {
     private long regionSeq;
 
     @Column(nullable = false)
-    private String regionCode;  // 서비스 지역 코드
+    private String regionCode;
 
     @Column(nullable = false)
-    private String regionName;  // 서비스 지역 이름
+    private String regionName;
 
-    @OneToMany(mappedBy = "regionEntityCity")
+    @OneToMany(mappedBy = "regionCity")
     private List<EcoProgramEntity> ecoProgramEntityList;
 
     public RegionEntity(String regionCode, String regionName) {

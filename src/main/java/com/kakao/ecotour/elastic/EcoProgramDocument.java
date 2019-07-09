@@ -49,8 +49,8 @@ public class EcoProgramDocument {
 
     public static EcoProgramDocument of(EcoProgramEntity ecoProgramEntity) {
         EcoProgramDocument ecoProgramDocument = ModelMapperUtils.getModelMapper().map(ecoProgramEntity, EcoProgramDocument.class);
-        ecoProgramDocument.setRegionCode(ecoProgramEntity.getRegionEntityCity().getRegionCode());
-        ecoProgramDocument.setRegionName(ecoProgramEntity.getRegionEntityCity().getRegionName());
+        ecoProgramDocument.setRegionCode(ecoProgramEntity.getRegionCity().getRegionCode());
+        ecoProgramDocument.setRegionName(ecoProgramEntity.getRegionCity().getRegionName());
         return ecoProgramDocument;
     }
 

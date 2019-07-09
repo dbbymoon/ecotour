@@ -9,6 +9,11 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+    elasticsearch 검색 결과 VO
+        :   서비스 지역 개수 조회 by 프로그램 소개 컬럼 키워드
+ */
+
 @Getter
 @Setter
 @AllArgsConstructor

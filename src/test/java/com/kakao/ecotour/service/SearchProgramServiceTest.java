@@ -51,13 +51,13 @@ public class SearchProgramServiceTest {
     }
 
     @Test(expected = ProgramNotFoundException.class)
-    public void getEcoProgram_PROGRAM_NOT_FOUND_EXCEPTION() {
+    public void getEcoProgram_ID_없는_경우_PROGRAM_NOT_FOUND_EXCEPTION() {
         when(ecoProgramRepository.findById(anyLong())).thenReturn(Optional.empty());
         searchProgramService.getEcoProgram(1);
     }
 
     @Test
-    public void getEcoProgram() {
+    public void getEcoProgram_ID_있는_경우_결과_비교() {
         EcoProgramEntity ecoProgramEntity = generateEcoProgramEntity(1);
 
         when(ecoProgramRepository.findById(1L)).thenReturn(Optional.of(ecoProgramEntity));
@@ -69,7 +69,7 @@ public class SearchProgramServiceTest {
     }
 
     @Test
-    public void getEcoProgramList_EMPTY_LIST() {
+    public void getEcoProgramList_데이터_없음_EMPTY_LIST() {
         when(ecoProgramRepository.findAll()).thenReturn(Collections.emptyList());
         List<EcoProgramCSV> ecoProgramCSVListResult = searchProgramService.getEcoProgramList();
 
@@ -77,7 +77,7 @@ public class SearchProgramServiceTest {
     }
 
     @Test
-    public void getEcoProgramList() {
+    public void getEcoProgramList_데이터_있음_결과_비교() {
         List<EcoProgramEntity> ecoProgramEntityList = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             ecoProgramEntityList.add(generateEcoProgramEntity(i));
@@ -93,7 +93,7 @@ public class SearchProgramServiceTest {
     }
 
     @Test
-    public void getEcoProgramListByRegionCode_EMPTY_LIST() {
+    public void getEcoProgramListByRegionCode_데이터_없음_EMPTY_LIST() {
         when(ecoProgramElasticRepository.findByRegionCode(anyString())).thenReturn(Collections.emptyList());
         List<EcoProgramCSV> ecoProgramCSVListResult = searchProgramService.getEcoProgramListByRegionCode("reg42210");
 
@@ -101,7 +101,7 @@ public class SearchProgramServiceTest {
     }
 
     @Test
-    public void getEcoProgramListByRegionCode() {
+    public void getEcoProgramListByRegionCode_데이터_있음_결과_비교() {
         final String regionCode = "reg42210";
 
         List<EcoProgramDocument> ecoProgramDocumentList = new ArrayList<>();

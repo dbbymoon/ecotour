@@ -43,18 +43,17 @@ public class APISearchAddressService {
 
     // REST API 요청
     private APIResponseVO getResponse(String regionName) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<APIResponseVO> response
-                = restTemplate.exchange(apiUrl + regionName, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), APIResponseVO.class);
-        return response.getBody();
-    }
 
-    // Header
-    private HttpHeaders getHttpHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.set("Authorization", apiKey);
-        return httpHeaders;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<APIResponseVO> response
+                = restTemplate.exchange(apiUrl + regionName, HttpMethod.GET, new HttpEntity<>(httpHeaders), APIResponseVO.class);
+
+        return response.getBody();
     }
+
 
 }

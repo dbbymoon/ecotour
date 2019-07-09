@@ -5,7 +5,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
@@ -40,6 +39,7 @@ public class ManageProgramController {
     @PostMapping("/load")
     @ApiOperation(value = "생태 관광 프로그램 데이터셋(csv) 저장")
     public void loadCsvFile(@RequestParam("fileName") String fileName) throws FileNotFoundException, UnsupportedEncodingException {
+
         //final String fileName = "C:\\Users\\whrudcks\\Desktop\\ecotour.csv";
 
         InputStreamReader isr = new InputStreamReader(new FileInputStream(fileName), "euc-kr");

@@ -61,7 +61,7 @@ public class ManageProgramServiceTest {
     }
 
     @Test
-    public void saveRegion_FOUND_REGION_IN_REGION_TABLE_orElseGet_수행_0번() {
+    public void saveRegion_FOUND_REGION_IN_REGION_TABLE_orElseGet_수행_0번_수행() {
 
         when(apiSearchAddressService.getRegion(regionNameForTest)).thenReturn(regionEntityForTest);
         when(regionRepository.findByRegionName(regionNameForTest)).thenReturn(Optional.of(regionEntityForTest));
@@ -72,7 +72,7 @@ public class ManageProgramServiceTest {
     }
 
     @Test
-    public void saveRegion_FOUND_REGION_IN_REGION_TABLE() {
+    public void saveRegion_FOUND_REGION_IN_REGION_TABLE_결과_비교() {
 
         when(apiSearchAddressService.getRegion(regionNameForTest)).thenReturn(regionEntityForTest);
         when(regionRepository.findByRegionName(regionNameForTest)).thenReturn(Optional.of(regionEntityForTest));
@@ -96,7 +96,7 @@ public class ManageProgramServiceTest {
     }
 
     @Test
-    public void saveRegion_NOT_FOUND_REGION_IN_REGION_TABLE() {
+    public void saveRegion_NOT_FOUND_REGION_IN_REGION_TABLE_결과_비교() {
 
         when(apiSearchAddressService.getRegion(regionNameForTest)).thenReturn(regionEntityForTest);
         when(regionRepository.findByRegionName(regionNameForTest)).thenReturn(Optional.empty());

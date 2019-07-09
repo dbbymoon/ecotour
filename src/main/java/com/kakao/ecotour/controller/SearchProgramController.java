@@ -25,7 +25,7 @@ public class SearchProgramController {
     }
 
     @GetMapping
-    @ApiOperation(value = "프로그램 목록 조회")
+    @ApiOperation(value = "프로그램 전체 조회")
     public List<EcoProgramCSV> getEcoProgramList() {
         return searchProgramService.getEcoProgramList();
     }
@@ -43,9 +43,9 @@ public class SearchProgramController {
     }
 
     @GetMapping("/search")
-    @ApiOperation(value = "프로그램 조회 by 서비스 지역")
-    public RegionSearchResultVO getEcoProgramListByRegion(@RequestParam("region") String region) throws SearchResultNotExistException {
-        return searchProgramService.getEcoProgramListByRegion(region);
+    @ApiOperation(value = "프로그램 조회 by 서비스 지역명")
+    public RegionSearchResultVO getEcoProgramListByRegionName(@RequestParam("region") String region) throws SearchResultNotExistException {
+        return searchProgramService.getEcoProgramListByRegionName(region);
     }
 
     @GetMapping("/count/region")

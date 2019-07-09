@@ -40,7 +40,7 @@ public class ManageProgramService {
     }
 
 
-    public RegionEntity saveRegion(String address) {
+    RegionEntity saveRegion(String address) {
 
         RegionEntity regionEntity = APISearchAddressService.getRegion(address);
 

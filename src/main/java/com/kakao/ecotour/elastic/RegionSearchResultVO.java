@@ -12,12 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/*
+    elasticsearch 검색 결과 VO
+        :   프로그램 조회 by 서비스 지역명
+ */
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class RegionSearchResultVO {
 
-    private String region;  // RegionEntity Code
+    private String region;  // Region Code
 
     private List<Program> programs;
 

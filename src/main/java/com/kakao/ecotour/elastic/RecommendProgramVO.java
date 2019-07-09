@@ -6,6 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.elasticsearch.action.search.SearchResponse;
 
+/*
+    elasticsearch 검색 결과 VO
+        :   프로그램 추천 by 서비스 지역, 키워드
+ */
+
 @Getter
 @Setter
 @AllArgsConstructor

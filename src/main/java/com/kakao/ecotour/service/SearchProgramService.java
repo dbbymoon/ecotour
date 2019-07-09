@@ -35,7 +35,7 @@ public class SearchProgramService {
         return EcoProgramCSV.ofDto(ecoProgramElasticRepository.findByRegionCode(regionCode));
     }
 
-    public RegionSearchResultVO getEcoProgramListByRegion(String regionName) throws SearchResultNotExistException {
+    public RegionSearchResultVO getEcoProgramListByRegionName(String regionName) throws SearchResultNotExistException {
         return ecoProgramElasticRepository.findByRegionName(regionName);
     }
 
