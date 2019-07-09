@@ -1,5 +1,7 @@
 package com.kakao.ecotour.jpa;
 
+import com.kakao.ecotour.util.ModelMapperUtils;
+import com.kakao.ecotour.kakaoapi.RegionInfoRefiner;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,5 +33,9 @@ public class RegionEntity {
     public RegionEntity(String regionCode, String regionName) {
         this.regionCode = regionCode;
         this.regionName = regionName;
+    }
+
+    public static RegionEntity of(RegionInfoRefiner.RegionDTO regionDTO) {
+        return ModelMapperUtils.getModelMapper().map(regionDTO, RegionEntity.class);
     }
 }

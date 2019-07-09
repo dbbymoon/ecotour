@@ -34,7 +34,7 @@ class APIResponseVO {
             private String h_code;
 
             RegionEntity getRegion() {
-                return new RegionEntity("reg" + h_code.substring(0, 5), address_name);
+                return RegionEntity.of(RegionInfoRefiner.getRegionDTO(h_code, address_name));
             }
 
         }

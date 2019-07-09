@@ -26,14 +26,13 @@ public class APISearchAddressService {
     // RegionEntity 반환
     public RegionEntity getRegion(String address) {
 
-        String[] addressArr = address.split(" ");
-        String regionName = addressArr.length < 2 ? addressArr[0] : addressArr[0] + " " + addressArr[1];
+        String regionName = RegionInfoRefiner.refineAddress(address);
 
         APIResponseVO response = getResponse(regionName);
 
         try {
             return response.getRegion()
-                    .orElseGet(() -> getResponse(addressArr[0]).getRegion()
+                    .orElseGet(() -> getResponse(regionName.split(" ")[0]).getRegion()
                             .orElseThrow(APINotFoundAddressException::new));
         } catch (APINotFoundAddressException e) {
             log.debug(e.getMessage());
@@ -57,6 +56,5 @@ public class APISearchAddressService {
         httpHeaders.set("Authorization", apiKey);
         return httpHeaders;
     }
-
 
 }

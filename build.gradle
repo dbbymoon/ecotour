@@ -33,6 +33,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+    testCompile group: 'org.mockito', name: 'mockito-inline', version: '2.7.13'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.58'
     compile('org.modelmapper:modelmapper:0.7.8')
     compile('org.springframework.boot:spring-boot-starter-webflux')

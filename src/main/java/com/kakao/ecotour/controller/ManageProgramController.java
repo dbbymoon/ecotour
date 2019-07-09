@@ -27,13 +27,13 @@ public class ManageProgramController {
 
     @PostMapping
     @ApiOperation(value = "생태 관광 프로그램 추가")
-    public void saveEcoProgram(@RequestBody EcoProgramCSV ecoProgramCSV) throws JSONException {
+    public void saveEcoProgram(@RequestBody EcoProgramCSV ecoProgramCSV) {
         manageProgramService.saveEcoProgram(ecoProgramCSV);
     }
 
     @PutMapping("/{prgmSeq}")
     @ApiOperation(value = "생태 관광 프로그램 수정")
-    public void updateEcoProgram(@RequestBody EcoProgramCSV ecoProgramCSV) throws JSONException {
+    public void updateEcoProgram(@RequestBody EcoProgramCSV ecoProgramCSV) {
         manageProgramService.saveEcoProgram(ecoProgramCSV);
     }
 

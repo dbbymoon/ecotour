@@ -4,23 +4,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @ControllerAdvice
-public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ProgramNotFoundException.class)
+    @org.springframework.web.bind.annotation.ExceptionHandler(ProgramNotFoundException.class)
     public ResponseEntity<String> programNotFoundException(ProgramNotFoundException e) {
         log.error(e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    @ExceptionHandler(SearchResultNotExistException.class)
+    @org.springframework.web.bind.annotation.ExceptionHandler(SearchResultNotExistException.class)
     public ResponseEntity<String> searchResultNotExistException(SearchResultNotExistException e) {
         log.error(e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
     }
 
 }
