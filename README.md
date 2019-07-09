@@ -27,6 +27,8 @@
 
 ## 기능 명세
 
+> API Documentation : `/swagger-ui.html`
+
 ### 기본 기능 
 
 #### 1. 생태 관광 데이터 (CSV) 저장
@@ -509,5 +511,109 @@ public static RegionSearchResultVO of(SearchResponse response) throws SearchResu
 ~~~~
 
 
+
+### 서비스 지역 데이터 => Region Code
+
+#### Region Code 할당 규칙
+
+생태 관광 정보 프로그램으로 등록된 데이터의 '서비스 지역'은 보통 주소로 입력되어 있다. 
+
+각 데이터에 Region Code 를 할당하기 전에 몇 가지 규칙을 세웠다.
+
+
+1. Region Code 할당 방법
+
+각 지역구에는 지역 코드가 있다. Kakao API 중 주소 검색 API를 주소와 함께 호출하면 h_code (행정 코드) 를 받아올 수 있어서 이 API 를 이용했다. 
+h_code 는 10자리의 숫자로 이루어져 있다.
+
+
+2. Region Code의 범위 : 시 군 구
+
+'경기도 성남시 분당구' 와  '경기도 성남시 수정구' 두 개의 데이터가 있으면 '경기도 성남시' 로 통일할 수 있도록 했다.
+
+Kakao API 에서 받아온 10자리의 h_code는 시/군/구 까지는 앞 다섯자리가 동일하다. 따라서, 받아온 h_code를 앞 다섯자리만 잘라서 Region Code로 사용하기로 했다.
+
+
+3. 쉼표(,) 또는 물결(~) 이 있는 서비스 지역 데이터
+
+데이터셋 중에서 어떤 데이터는 서비스 지역이 '강원도 속초, 양양, 고성' 이라고 입력되어 있기도 하고, '전라남도 완도군~여수시'로 되어있는 것도 있다. 
+
+이러한 데이터는 각각 '강원도', '전라남도'로 지역구 이름을 정했다. 
+
+
+4. 국립공원, 산 등의 주소 데이터
+
+'강원도 오대산국립공원', '충청도 월악산'과 같은 데이터가 있다. 이 데이터로 API를 호출하게 되면 결과가 나오지 않는다. 따라서 이 경우에도 각각 '강원도', '충청도'로 지역구 이름을 정했다.
+
+
+
+5. 검색 결과가 나오지 않는 경우
+
+이 프로젝트를 위해 사용한 데이터셋의 서비스 지역 데이터 중에서는 아예 검색 결과가 나오지 않는 경우가 없었다. 왜냐하면 '경기도'라는 데이터만 있어도 검색이 되기 때문이다. 
+
+하지만 추후에 아예 검색이 되지 않는 데이터가 입력될 경우 사용자 정의 예외 APINotFoundAddressException 를 발생시켰으며, 현재 프로젝트에서는 API가 주소를 검색할 수 없다는 내용의 로그를 출력하고, 문자열의 hashcode를 Region Code로 할당하는 것으로 했다.
+
+
+
+
+#### Response VO
+
+Region Code 검색을 위해 사용한 kakao 주소 검색 API 는 결과를 json 형태로 반환한다. 
+
+현재 프로젝트에서 필요한 주소 관련 데이터는 '지역 코드', '지역구 이름' 이다. 따라서, API 응답 결과에서 필요한 데이터만을 매핑하여 쓸 수 있는 VO 클래스를 따로 작성하여 좀 더 명확하게 했다.
+
+~~~~
+@JsonIgnoreProperties(ignoreUnknown = true)
+class APIResponseVO {
+
+    @JsonProperty
+    private List<Document> documents;
+
+    private static class Document {
+
+        @JsonProperty
+        private Address address;
+
+        private static class Address {
+
+            @JsonProperty
+            private String address_name;
+
+            @JsonProperty
+            private String h_code;
+        }
+    }
+}
+~~~~
+
+응답 결과인 json의 데이터 구조 방식을 파악하고, 필요한 address_name과 h_code만을 받아왔다.
+
+
+~~~~
+    Optional<RegionEntity> getRegion() {
+        return documents.isEmpty() ? Optional.empty()
+                : Optional.of(documents.get(0).address.getRegion());
+    }
+~~~~
+
+그리고 위와 같은 메소드를 VO 클래스 내부에 작성해서 documents가 비어있으면(검색 결과 없음) 비어있는 Optional 객체를 반환하고, 검색 결과가 존재하면 RegionCode와 RegionName이 담긴 RegionEntity 를 반환하도록 했다.
+
+
+
+
+#### 서비스 분리
+
+- APISearchAddressService.class
+
+사실 이 kakao API를 호출하는 경우는 ManageProgramService에서 생태 관광 정보를 저장(saveEcoProgram()) 하는 상황 뿐이다.
+
+하지만 외부 API 를 연동하는 서비스이며 Transactional 설정을 사용하고 있는 ManageProgramService 클래스에서 분리되어야 한다고 생각했으며 '주소 검색'이라는 확실한 역할을 담당하고 있어, APISearchAddressService 라는 클래스로 분리하였다. 
+
+그리고 api key와 api url은 /resources의 kakaoapi.properties 에 따로 설정 정보를 저장하여, api 관련 정보를 관리할 수 있게 했다.
+
+
+- RegionInfoRefiner.class
+
+서비스 지역 데이터를 주소 검색 API 에 사용했을 때 정확한 결과를 받을 수 있도록 '서비스 지역 주소 값'을 정제해야 할 케이스가 많이 존재했기 때문에 서비스 지역 값을 정제하는 역할만 담당하는 RegionInfoRefiner 라는 클래스를 작성하여 역할을 분리했다.
 
 
