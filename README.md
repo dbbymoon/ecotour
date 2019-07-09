@@ -19,9 +19,9 @@
 
 ## 기능 명세
 
-## 
+### 기본 기능 
 
-### 1. 생태 관광 데이터 (CSV) 저장
+#### 1. 생태 관광 데이터 (CSV) 저장
 
 - HTTP Method : POST
 - URI : /programs/load
@@ -30,7 +30,8 @@
 
 
 
-### 2. 생태 관광 정보 데이터 추가
+
+#### 2. 생태 관광 정보 데이터 추가
 
 - HTTP Method : POST
 - URI : /programs
@@ -50,7 +51,8 @@
 
 
 
-### 3. 생태 관광 정보 데이터 수정
+
+#### 3. 생태 관광 정보 데이터 수정
 
 - HTTP Method : PUT
 - URI : /programs/{prgmSeq}
@@ -69,7 +71,9 @@
 ~~~
 
 
-### 4. 생태 관광 정보 데이터 조회 (전체)
+
+
+#### 4. 생태 관광 정보 데이터 조회 (전체)
 
 - HTTP Method : GET
 - URI : /programs
@@ -94,7 +98,9 @@
 ~~~~
 
 
-### 5. 생태 관광 정보 데이터 조회 (단일 프로그램 조회 by ID)
+
+
+#### 5. 생태 관광 정보 데이터 조회 (단일 프로그램 조회 by ID)
 
 - HTTP Method : GET
 - URI : /programs/{prgmSeq}
@@ -116,21 +122,140 @@
 
 
 
-### Search
-
-기능  | HTTP Method | URI | Input | Output
-------|-------------|-----|-------|-------
-관광 정보 조회 | GET | /programs/region/{regionCode} | | List
-관광 정보 조회  | GET | /programs/search  | region | 서비스 지역 코드, 관광 정보(프로그램명, 테마) 목록
-서비스 지역 개수 조회 | GET | /programs/count/region  | keyword | 키워드, 관광 정보(지역명, 개수) 목록
-출현 빈도수 조회  | GET | /programs/count/keyword | keyword | 키워드, 출현 빈도수
 
 
-### Recommend
+### 검색 
 
-기능  | HTTP Method | URI | Input | Output
-------|-------------|-----|-------|-------
-프로그램 추천 | GET | /programs/recommend | keword, region  | 프로그램 코드
+#### 1. 생태 관광 정보 조회 by 지역 코드
+
+- HTTP Method : GET
+- URI : /programs/region/{regionCode}
+> `/programs/region/{regionCode}`
+- Response
+~~~~
+[
+    {
+        "prgmSeq": 110,
+        "prgmName": "[생태나누리] 아름다운 날들을 위한 힐링",
+        "theme": "자연생태체험,",
+        "region": "충청북도 제천시 한수면",
+        "prgmInfo": "",
+        "prgmDetailInfo": " 문경지구 실버세대의 건강증진과 여가생활 지원을 결합한 힐링 프로그램입니다."
+    },
+    {
+        "prgmSeq": 109,
+        "prgmName": "[생태나누리] 야생화향기와 함께 떠나는 월악산여행",
+        "theme": "자연생태체험,",
+        "region": "충청북도 제천시 한수면",
+        "prgmInfo": "월악산국립공원 송계지구 및 단양지구(하늘재~만수계곡자연관찰로~장회나루~사인암)",
+        "prgmDetailInfo": " 월악산국립공원  '야생화향기와 함께 떠나는 월악산여행' 생태나누리 프로그램은 하늘재, 만수계곡자연관찰로, 옥순봉·구담봉, 사인암 등 월악산국립공원의 대표 역사문화자원과 자연생태를 자유롭게 체험하고 느낄 수 있는 프로그램입니다."
+    }
+]
+~~~~
+
+
+
+
+#### 2. 생태 관광 정보(프로그램명, 테마) 조회 by 지역명
+
+- HTTP Method : GET
+- URI : /programs/search
+- Params : region
+> `/programs/search?region=평창군`
+- Response
+~~~~
+{
+    "region": "reg42760",
+    "programs": [
+        {
+            "prgmName": "오감만족! 오대산 에코 어드벤처 투어",
+            "theme": "아동·청소년 체험학습"
+        },
+        {
+            "prgmName": "소금강 지역문화 체험",
+            "theme": "자연생태,"
+        },
+        {
+            "prgmName": "오대산국립공원 힐링캠프",
+            "theme": "숲 치유,"
+        },
+        {
+            "prgmName": "(1박2일)자연으로 떠나는 행복여행",
+            "theme": "문화생태체험,자연생태체험,"
+        }
+    ]
+}
+~~~~
+
+
+
+
+#### 3. 서비스 지역 개수 조회 by 프로그램 소개 키워드
+
+- HTTP Method : GET
+- URI : /programs/count/region
+- Params : keyword
+> `/programs/count/region?keyword=세계문화유산`
+- Response
+~~~~
+{
+    "keyword": "세계문화유산",
+    "programs": [
+        {
+            "region": "경북 경주시",
+            "count": 2
+        }
+    ]
+}
+~~~~
+
+
+
+
+#### 4. 키워드 출현 빈도수 조회 by 프로그램 상세 소개 키워드
+
+- HTTP Method : GET
+- URI : /programs/count/keyword
+- Params : keyword
+> `/programs/count/keyword?keyword=생태체험`
+- Response
+~~~~
+{
+    "keyword": "생태체험",
+    "count": 8
+}
+~~~~
+
+
+
+
+
+
+
+
+### 추천
+
+#### 1. 생태 관광 프로그램 추천 by 키워드, 지역명
+
+- HTTP Method : GET
+- URI : /programs/recommend
+- Params : keyword, region
+> `/programs/recommend?keyword=평창&region=국립공원`
+- Response
+~~~~
+{
+    "program": "prgm12"
+}
+~~~~
+
+
+
+
+
+
+
+
+
 
 
 
