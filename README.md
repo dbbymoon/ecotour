@@ -304,8 +304,8 @@ public class EcoProgramDocument {
 ~~~~
 
 - Mapping
--- regionCode, regionName : 집계 기능으로 사용할 지역 코드, 지역구 이름은 데이터 타입을 keyword로 설정하여 문자열 필드 분석이 가능하도록 한다.
--- theme, region, prgmInfo, prgmDetailInfo : 전문 텍스트 검색에 활용할 길이가 긴 데이터는 타입을 text로 설정했다. 그리고 ngram_analyer를 적용했다.
+  - regionCode, regionName : 집계 기능으로 사용할 지역 코드, 지역구 이름은 데이터 타입을 keyword로 설정하여 문자열 필드 분석이 가능하도록 한다.
+  - theme, region, prgmInfo, prgmDetailInfo : 전문 텍스트 검색에 활용할 길이가 긴 데이터는 타입을 text로 설정했다. 그리고 ngram_analyer를 적용했다.
 
 
 
