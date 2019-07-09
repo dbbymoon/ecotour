@@ -17,7 +17,7 @@
 > `mysql> create database ecotour`
 - MySQL 설정 : resources/application.properties
 > `spring.datasource.hikari.username={username}`
-> `spring.datasource.hikari.password=skfo`
+> `spring.datasource.hikari.password={password}`
 - Kakao API key 설정 : resources/kakaoapi.properties 
 > `kakao.api.key={API KEY}`
 
@@ -255,9 +255,6 @@
     "program": "prgm12"
 }
 ~~~~
-
-
-
 
 
 
