@@ -1,134 +1,147 @@
 # ecotour
-생태 관광 정보 API
+생태 관광 정보 서비스 API
+
+
+## 기술 스택
+- Java 8
+- Spring Boot 2.1.6
+- Spring Data JPA
+- MySQL
+- ElasticSearch 6.0.0
+
+
+## 빌드 및 실행 방법
+- MySQL Database 설정 
+> Create Database ecotour  
+- Kakao API : resources/kakaoapi.properties
+> kakao.api.key=API 키 설정
 
-기본 문제
 
+## 기능 명세
 
-1.생태 관광 프로그램 CSV 데이터셋 저장
+## 
 
-데이터 파일에서 각 레코드를 데이터베이스에 저장하는 API 를 개발하세요.
+### 1. 생태 관광 데이터 (CSV) 저장
 
-HTTP Method : POST 
+- HTTP Method : POST
+- URI : /programs/load
+- Params : fileName
+> `/programs/load?fileName=저장경로.csv`
 
-URI : /programs/load
 
-Input : fileName
 
-Output : 
+### 2. 생태 관광 정보 데이터 추가
 
+- HTTP Method : POST
+- URI : /programs
+- Request Body : Programs
+> `/programs`
 
+~~~
+{
+  "prgmSeq": {prgmSeq},
+  "prgmName": "프로그램명",
+  "theme": "테마별 분류",
+  "region": "경기도 광주시",
+  "prgmInfo": "프로그램 소개",
+  "prgmDetailInfo": "프로그램 상세 소개"
+}
+~~~
 
 
-2.생태 관광 정보 데이터 조회
 
-생태 관광정보 데이터를 조회할 수 있는 API 를 개발하세요
+### 3. 생태 관광 정보 데이터 수정
 
-2.1. 프로그램 전체 목록 조회
+- HTTP Method : PUT
+- URI : /programs/{prgmSeq}
+- Request Body : Programs
+> `/programs/{prgmSeq}`
 
-HTTP Method : GET
+~~~
+{
+  "prgmSeq": {prgmSeq},
+  "prgmName": "프로그램명 수정",
+  "theme": "테마별 분류 수정",
+  "region": "경기도 성남시",
+  "prgmInfo": "프로그램 소개 수정",
+  "prgmDetailInfo": "프로그램 상세 소개 수정"
+}
+~~~
 
-URI : /programs
 
-Input : 
+### 4. 생태 관광 정보 데이터 조회 (전체)
 
-Output : List<Program>
-  
-2.2. ID에 해당하는 단일 프로그램 조회 
+- HTTP Method : GET
+- URI : /programs
+> `/programs`
+- Response
+~~~~
+[
+    {
+        "prgmSeq": 1,
+        "prgmName": "자연과 문화를 함께 즐기는 설악산 기행",
+        "theme": "문화생태체험,자연생태체험,",
+        "region": "강원도 속초",
+        "prgmInfo": "설악산 탐방안내소, 신흥사, 권금성, 비룡폭포",
+        "prgmDetailInfo": " 설악산은 왜 설악산이고, 신흥사는 왜 신흥사일까요? 설악산에 대해 정확히 알고, 배우고, 느낄 수 있는 당일형 생태관광입니다."
+    },
+    {
+        "prgmSeq": 2,
+        ....
+    },
+    ...
+]
+~~~~
 
-HTTP Method : GET
 
-URI : /programs/{prgmSeq}
+### 5. 생태 관광 정보 데이터 조회 (단일 프로그램 조회 by ID)
 
-Input :
+- HTTP Method : GET
+- URI : /programs/{prgmSeq}
+> `/programs/{prgmSeq}`
+- Response
+~~~~
+{
+    "prgmSeq": 1,
+    "prgmName": "자연과 문화를 함께 즐기는 설악산 기행",
+    "theme": "문화생태체험,자연생태체험,",
+    "region": "강원도 속초",
+    "prgmInfo": "설악산 탐방안내소, 신흥사, 권금성, 비룡폭포",
+    "prgmDetailInfo": " 설악산은 왜 설악산이고, 신흥사는 왜 신흥사일까요? 설악산에 대해 정확히 알고, 배우고, 느낄 수 있는 당일형 생태관광입니다."
+}
+~~~~
 
-Output : Program
 
-2.3. 서비스 지역 코드(RegionCode)에 해당하는 프로그램 목록 조회
 
-HTTP Method : GET
 
-URI : /programs/regionEntity/{regionCode}
 
-Input :
 
-Output : List<Program>
+### Search
 
+기능  | HTTP Method | URI | Input | Output
+------|-------------|-----|-------|-------
+관광 정보 조회 | GET | /programs/region/{regionCode} | | List
+관광 정보 조회  | GET | /programs/search  | region | 서비스 지역 코드, 관광 정보(프로그램명, 테마) 목록
+서비스 지역 개수 조회 | GET | /programs/count/region  | keyword | 키워드, 관광 정보(지역명, 개수) 목록
+출현 빈도수 조회  | GET | /programs/count/keyword | keyword | 키워드, 출현 빈도수
 
 
-3.생태 관광 정보 데이터 추가
-생태 관광정보 데이터를 추가할 수 있는 API 를 개발하세요
+### Recommend
 
-HTTP Method : POST
+기능  | HTTP Method | URI | Input | Output
+------|-------------|-----|-------|-------
+프로그램 추천 | GET | /programs/recommend | keword, region  | 프로그램 코드
 
-URI : /programs
 
-Input : Program CSV 데이터 형식
 
-Output : 
+## 빌드 및 실행 방법
 
 
-4.생태 관광 정보 데이터 수정
 
-생태 관광정보 데이터를 수정할 수 있는 API 를 개발하세요
+## 문제 해결 전략
 
-HTTP Method : PUT
 
-URI : /programs/{prgmSeq}
 
-Input : Program CSV 데이터 형식
 
-Output :
 
 
-5.지역명에 해당하는 프로그램 조회
-
-생태 관광지 중에 서비스 지역 컬럼에서 특정 지역에서 진행되는 프로그램명과 테마를 출력하는 API 를 개발하세요.
-
-HTTP Method : GET
-
-URI : /programs/search
-
-Input : regionEntity 지역 이름
-
-Output : 서비스 지역 코드, 프로그램 정보(프로그램명, 테마) 목록
-
-
-6.키워드에 해당하는 서비스 지역 개수 조회
-
-생태 정보 데이터에 "프로그램 소개” 컬럼에서 특정 문자열이 포함된 레코드에서 서비스 지역 개수를 세어 출력하는 API 를 개발하세요.
-
-HTTP Method : GET
-
-URI : /programs/count/regionEntity
-
-Input : keyword 검색 키워드
-
-Output : 키워드, 프로그램 정보(지역명, 개수) 목록
-
-
-7.키워드에 해당하는 출현 빈도수 조회
-
-모든 레코드에 프로그램 상세 정보를 읽어와서 입력 단어의 출현빈도수를 계산하여 출력
-하는 API 를 개발하세요.
-
-HTTP Method : GET
-
-URI : /programs/count/keyword
-
-Input : keyword 검색 키워드
-
-Output : 키워드, 출현 빈도수
-
-
-8.프로그램 추천
-
-생태관광 정보를 기반으로 생태관광 프로그램을 추천해주려고 합니다. 지역명과 관광 키
-워드를 입력받아 프로그램 코드를 출력하는 API 를 개발하세요.
-
-HTTP Method : GET
-
-URI : /programs/recommend
-
-Input : keyword 검색 키워드, regionEntity 지역명
-
-Output : 프로그램 코드
