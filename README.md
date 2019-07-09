@@ -1,8 +1,10 @@
 # ecotour
+
 생태 관광 정보 서비스 API
 
 
 ## 기술 스택
+
 - Java 8
 - Spring Boot 2.1.6
 - Spring Data JPA
@@ -11,10 +13,16 @@
 
 
 ## 빌드 및 실행 방법
-- MySQL Database 설정 
-> Create Database ecotour  
-- Kakao API : resources/kakaoapi.properties
-> kakao.api.key=API 키 설정
+- MySQL Database 생성
+> `mysql> create database ecotour`
+- MySQL 설정 : resources/application.properties
+> `spring.datasource.hikari.username={username}`
+> `spring.datasource.hikari.password=skfo`
+- Kakao API key 설정 : resources/kakaoapi.properties 
+> `kakao.api.key={API KEY}`
+
+위 설정을 마친 후 Run 'EcoTourApplication'
+
 
 
 ## 기능 명세
@@ -257,9 +265,6 @@
 
 
 
-
-
-## 빌드 및 실행 방법
 
 
 
